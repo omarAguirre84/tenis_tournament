@@ -25,3 +25,6 @@
 
 ### Posibles mejoras
 - Separar la logica de obtencion de nombres en otro Bundle o incluso en un microservicio.
+
+### Subido a AWS
+- http://54.145.251.71:8080/api/docs
