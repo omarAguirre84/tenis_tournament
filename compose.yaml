@@ -1,0 +1,62 @@
+version: '3'
+
+services:
+    ###> PHP + Symfony ###
+    app:
+        container_name: tenis_tournament_php
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - ./:/var/www/html
+        ports:
+            - "8000:8000"
+        environment:
+            APP_ENV: ${APP_ENV}
+            APP_DEBUG: "1"
+            PHP_VERSION: 8.3
+        depends_on:
+            - database
+        working_dir: /var/www/html
+
+    ###> Nginx ###
+    nginx:
+        image: nginx:alpine
+        container_name: tenis_tournament_nginx
+        ports:
+            - "8080:80"
+        volumes:
+            - ./:/var/www/html
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - app
+
+    ###> MySQL Database ###
+    ###> doctrine/doctrine-bundle ###
+    database:
+        image: 'mysql:8'
+        container_name: tenis_tournament_mysql8
+        environment:
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        ports:
+            # "3306" to "3306:3306". Where the first port is exposed to the host and the second is the container port.
+            # See https://docs.docker.com/compose/compose-file/#ports for more information.
+            - "3306:3306"
+            # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+            # - ./docker/db/data:/var/lib/postgresql/data:rw
+###< doctrine/doctrine-bundle ###
+
+    ###> REDIS ###
+    redis:
+        image: redis:alpine
+        container_name: tenis_tournament_redis
+        ports:
+            - "6379:6379"
+
+volumes:
+    ###> doctrine/doctrine-bundle ###
+    db-data:
+###< doctrine/doctrine-bundle ###

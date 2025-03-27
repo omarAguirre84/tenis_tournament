@@ -1,0 +1,16 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Redis:
+        class: Redis
+        factory: [Symfony\Component\Cache\Adapter\RedisAdapter, 'createConnection']
+        arguments:
+            - '%env(resolve:REDIS_DSN)%'
+
+    App\Infrastructure\Adapter\RedisClient:
+        arguments:
+            $redis: '@Redis'
+
+    App\Domain\Service\RedisClientInterface: '@App\Infrastructure\Adapter\RedisClient'
