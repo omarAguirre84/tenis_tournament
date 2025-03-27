@@ -28,3 +28,4 @@
 
 ### Subido a AWS
 - http://54.145.251.71:8080/api/docs
+- (Por tiempo no agregue el certificado ssl)
